@@ -6,7 +6,7 @@ Pytorch Implementation of "SpikeFormer: Image Reconstruction from the Sequence o
 
 ## Dataset Structure
 ```
-.  
+Dataset  
 ├── test  
 │   └── c.npz  
 ├── train  
