@@ -2,7 +2,7 @@
 Pytorch Implementation of "SpikeFormer: Image Reconstruction from the Sequence of Spike Camera Based on Transformer"[[Paper]](https://dl.acm.org/doi/abs/10.1145/3512388.3512399)
 
 ## Prerequisites
-* Ceate a conda environment by running `conda env create -f requirements.yml`
+* Create a conda environment by running `conda env create -f requirements.yml`
 
 ## Dataset Structure
 ```
