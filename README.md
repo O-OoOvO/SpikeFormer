@@ -3,6 +3,18 @@ Pytorch Implementation of "SpikeFormer: Image Reconstruction from the Sequence o
 
 ## Prerequisites
 
+## Dataset Structure
+```
+.  
+├── test  
+│   └── c.npz  
+├── train  
+│   └── a.npz  
+└── valid  
+    └── b.npz  
+```
+
+
 ## Training
 * Run `python train.py` to train SpikeFormer with training set.
 
