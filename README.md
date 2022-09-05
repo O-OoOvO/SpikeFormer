@@ -3,7 +3,6 @@ Pytorch Implementation of "SpikeFormer: Image Reconstruction from the Sequence o
 
 ## Prerequisites
 * Create a conda environment by running `conda env create -f requirements.yml`
-* Download the pre-trained VGG19 model here.
 
 ## Dataset Structure
 ```
