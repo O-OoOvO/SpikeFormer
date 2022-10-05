@@ -200,32 +200,6 @@ class SpikeFormer(nn.Module):
         )
         self.fournew = nn.PixelShuffle(4)
 
-    def fourpix_reshape(self,x):
-        b,c,h,w = x.shape
-        y = torch.FloatTensor(b,int(c/16),int(h*4),int(w*4))
-        for i in range(b):
-            for j in range(y.shape[1]):
-                y[i,j,::4,::4] = x[i,16*j,:,:]
-                y[i,j,::4,1::4] = x[i,16*j+1,:,:]
-                y[i,j,::4,2::4] = x[i,16*j+2,:,:]
-                y[i,j,::4,3::4] = x[i,16*j+3,:,:]
-
-                y[i,j,1::4,::4] = x[i,16*j+4,:,:]
-                y[i,j,1::4,1::4] = x[i,16*j+5,:,:]
-                y[i,j,1::4,2::4] = x[i,16*j+6,:,:]
-                y[i,j,1::4,3::4] = x[i,16*j+7,:,:]
-
-                y[i,j,2::4,::4] = x[i,16*j+8,:,:]
-                y[i,j,2::4,1::4] = x[i,16*j+9,:,:]
-                y[i,j,2::4,2::4] = x[i,16*j+10,:,:]
-                y[i,j,2::4,3::4] = x[i,16*j+11,:,:]
-
-                y[i,j,3::4,::4] = x[i,16*j+12,:,:]
-                y[i,j,3::4,1::4] = x[i,16*j+13,:,:]
-                y[i,j,3::4,2::4] = x[i,16*j+14,:,:]
-                y[i,j,3::4,3::4] = x[i,16*j+15,:,:]
-
-        return y
 
 
     def forward(self, x):
