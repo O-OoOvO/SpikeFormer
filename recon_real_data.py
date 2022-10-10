@@ -55,7 +55,7 @@ if __name__ == "__main__":
         reduction_ratio=(8, 4, 2, 1),  # reduction ratio of each stage for efficient attention
         num_layers=2,  # num layers of each stage
         decoder_dim=256,  # decoder dimension
-        out_channel = 1  # number of segmentation classes
+        out_channel = 1  # channel of restored image
     ).cuda()
 
     if reuse:
