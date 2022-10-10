@@ -40,7 +40,7 @@ if __name__ == "__main__":
                    5:'rotation1.dat', 6:'rotation2.dat',
                    7:'train-350kmh.dat', 8:'viaduct-bridge.dat'
     }
-    sceneName = sceneClass[6]
+    sceneName = sceneClass[2]
     dataPath = "/home/storage1/Dataset/SpikeImageData/RealData/%s" %(sceneName)
     resultPath = sceneName + "_stride_" + str(stride) + "/"
     shutil.rmtree(resultPath) if os.path.exists(resultPath) else os.mkdir(resultPath)
