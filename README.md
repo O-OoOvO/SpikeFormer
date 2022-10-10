@@ -5,7 +5,7 @@ Pytorch Implementation of "SpikeFormer: Image Reconstruction from the Sequence o
 * Create a conda environment by running `conda env create -f requirements.yml`
 
 ## Dataset Structure
-*To train the SpikeFormer, please organize file structure of the dataset as follows:
+* To train the SpikeFormer, please organize file structure of the dataset as follows:
 ```
 Dataset  
 ├── test  
