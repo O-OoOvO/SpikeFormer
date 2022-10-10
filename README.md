@@ -17,6 +17,7 @@ Dataset
 
 ## Pretrained Model
 * Download the pretrained model [here](https://pan.baidu.com/s/1aeW15vQh0GXgRJtfStBHDg) password: nwh5.
+* Put the model to ./CheckPoints/ 
 
 ## Training
 * Run `python train.py` to train SpikeFormer on training set.
