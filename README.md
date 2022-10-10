@@ -15,6 +15,8 @@ Dataset
     └── b.npz  
 ```
 
+## Pretrained Model
+* Download the pretrained model [here](https://pan.baidu.com/s/1aeW15vQh0GXgRJtfStBHDg).
 
 ## Training
 * Run `python train.py` to train SpikeFormer on training set.
