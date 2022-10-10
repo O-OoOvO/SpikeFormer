@@ -1,3 +1,7 @@
+'''
+Ref: To implenment SpikeFormer, we referred to the code of ”segefomer-pytorch” published on github
+     (link: https://github.com/lucidrains/segformer-pytorch.git)
+'''
 from math import sqrt
 from functools import partial
 import torch
@@ -21,7 +25,9 @@ class DsConv2d(nn.Module):
         super().__init__()
         self.net = nn.Sequential(
             nn.Conv2d(dim_in, dim_in, kernel_size = kernel_size, padding = padding, groups = dim_in, stride = stride, bias = bias),
-            nn.Conv2d(dim_in, dim_out, kernel_size = 1, bias = bias)
+            nn.GELU(),
+            nn.Conv2d(dim_in, dim_out, kernel_size = 1, bias = bias),
+            nn.GELU(),
         )
     def forward(self, x):
         return self.net(x)
@@ -33,6 +39,7 @@ class PreNorm(nn.Module):
         self.norm = LayerNorm(dim)
 
     def forward(self, x):
+        # return self.fn(x)
         return self.fn(self.norm(x))
 
 class EfficientSelfAttention(nn.Module):
@@ -49,7 +56,10 @@ class EfficientSelfAttention(nn.Module):
 
         self.to_q = nn.Conv2d(dim, dim, 1, bias = False)
         self.to_kv = nn.Conv2d(dim, dim * 2, reduction_ratio, stride = reduction_ratio, bias = False)
-        self.to_out = nn.Conv2d(dim, dim, 1, bias = False)
+        self.to_out = nn.Sequential(
+            nn.Conv2d(dim, dim, 1, bias=False),
+            nn.GELU()
+        )
 
     def forward(self, x):
         h, w = x.shape[-2:]
@@ -76,9 +86,11 @@ class MixFeedForward(nn.Module):
         hidden_dim = dim * expansion_factor
         self.net = nn.Sequential(
             nn.Conv2d(dim, hidden_dim, 1),
-            DsConv2d(hidden_dim, hidden_dim, 3, padding = 1),
             nn.GELU(),
-            nn.Conv2d(hidden_dim, dim, 1)
+            DsConv2d(hidden_dim, hidden_dim, 3, padding = 1),
+            # nn.GELU(),
+            nn.Conv2d(hidden_dim, dim, 1),
+            nn.GELU(),
         )
 
     def forward(self, x):
@@ -102,7 +114,6 @@ class MiT(nn.Module):
         dim_pairs = list(zip(dims[:-1], dims[1:]))
 
         self.stages = nn.ModuleList([])
-        # count = 0
 
         for (dim_in, dim_out), (kernel, stride, padding), num_layers, ff_expansion, heads, reduction_ratio in zip(dim_pairs, stage_kernel_stride_pad, num_layers, ff_expansion, heads, reduction_ratio):
             get_overlap_patches = nn.Unfold(kernel, stride = stride, padding = padding)
@@ -173,7 +184,7 @@ class SpikeFormer(nn.Module):
         num_layers = 2,
         channels =64,
         decoder_dim = 256,
-        num_classes = 4
+        out_channel = 1
     ):
         super().__init__()
         dims, heads, ff_expansion, reduction_ratio, num_layers = map(partial(cast_tuple, depth = 4), (dims, heads, ff_expansion, reduction_ratio, num_layers))
@@ -187,16 +198,21 @@ class SpikeFormer(nn.Module):
             reduction_ratio = reduction_ratio,
             num_layers = num_layers
         )
-        self.channel_transform = nn.Conv2d(inputDim, 64, 3, 1, 1)
+        self.channel_transform = nn.Sequential(
+            nn.Conv2d(inputDim, 64, 3, 1, 1),
+            nn.GELU()
+        )
 
         self.to_fused = nn.ModuleList([nn.Sequential(
             nn.Conv2d(dim, decoder_dim, 1),
-            nn.PixelShuffle(2 ** i)
+            nn.PixelShuffle(2 ** i),
+            nn.GELU(),
         ) for i, dim in enumerate(dims)])
 
-        self.to_segmentation = nn.Sequential(
+        self.to_restore = nn.Sequential(
             nn.Conv2d(256+64+16+4, decoder_dim, 1),
-            nn.Conv2d(decoder_dim, num_classes, 1),
+            nn.GELU(),
+            nn.Conv2d(decoder_dim, out_channel, 1),
         )
         self.fournew = nn.PixelShuffle(4)
 
@@ -211,4 +227,4 @@ class SpikeFormer(nn.Module):
 
         fused = torch.cat(fused, dim = 1)
 
-        return self.to_segmentation(fused)
+        return self.to_restore(fused)

@@ -123,7 +123,7 @@ if __name__ == "__main__":
     dataPath = "/home/storage2/shechen/Spike_Sample_250x400"
     spikeRadius = 32  # half length of input spike sequence expcept for the middle frame
     spikeLen = 2 * spikeRadius + 1  # length of input spike sequence
-    batchSize = 4
+    batchSize = 2
     epoch = 200
     start_epoch = 0
     lr = 2e-4
@@ -154,7 +154,7 @@ if __name__ == "__main__":
         reduction_ratio = (8, 4, 2, 1), # reduction ratio of each stage for efficient attention
         num_layers = 2,                 # num layers of each stage
         decoder_dim = 256,              # decoder dimension
-        num_classes = 1                 # number of segmentation classes
+        out_channel = 1                 # channel of restored image
     ).cuda()
 
     optimizer = optim.Adam(model.parameters(), lr=lr, betas=(0.9, 0.999), amsgrad=False)
