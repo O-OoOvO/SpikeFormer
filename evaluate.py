@@ -19,7 +19,7 @@ if __name__ == "__main__":
     reuse = True
     checkPath = "CheckPoints/best.pth"
 
-    validContainer = dl.DataContainer(dataPath=dataPath, dataType='test',
+    validContainer = dl.DataContainer(dataPath=dataPath, dataType='valid',
                                       spikeRadius=spikeRadius,batchSize=batchSize)
     validData = validContainer.GetLoader()
 
@@ -34,7 +34,7 @@ if __name__ == "__main__":
         reduction_ratio=(8, 4, 2, 1),  # reduction ratio of each stage for efficient attention
         num_layers=2,  # num layers of each stage
         decoder_dim=256,  # decoder dimension
-        num_classes=1  # channel of restored image
+        out_channel=1  # channel of restored image
     ).cuda()
 
 
@@ -84,3 +84,4 @@ if __name__ == "__main__":
 
         print('*********************************************************')
         print('PSNR: %s, SSIM: %s' % (psnr, ssim))
+
